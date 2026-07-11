@@ -12,7 +12,7 @@ time.sleep(2)
 try:
     while True:
         # Считываем строку из порта
-        data = [['water', 'photo'] 
+        data = [['water_level' , 'light_sensor'] 
                 [arduino.readline()]
                 ]
         
@@ -26,7 +26,7 @@ except KeyboardInterrupt:
     print("Порт закрыт")
 
 # Открываем файл для записи. encoding='utf-8' важен для русских букв
-with open('data/data.csv', mode='w', newline='', encoding='utf-8') as file:
+with open('public/data.csv', mode='w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
     
     # Записываем строки
