@@ -1,156 +1,167 @@
 <!doctype html>
 <html lang="ru">
 	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0"
-		/>
-		<title>Чашка в разрезе с уровнями</title>
+		<meta charset="utf-8" />
+		<title>Уровень воды и освещение</title>
 		<style>
 			body {
+				background: #1f1f1f;
+				color: #fff;
+				font-family: Arial, sans-serif;
 				display: flex;
-				justify-content: center;
+				flex-direction: column;
 				align-items: center;
-				height: 100vh;
-				background: #e9e4dc;
-				margin: 0;
-				font-family: sans-serif;
+				padding: 20px;
 			}
-
-			.mug {
-				position: relative;
-				width: 180px;
-				height: 220px;
+			h2 {
+				margin: 0 0 16px;
+				font-weight: 600;
 			}
-
-			/* Тень */
-			.shadow {
-				position: absolute;
-				left: 20px;
-				top: 210px;
-				width: 140px;
-				height: 10px;
-				background: rgba(0, 0, 0, 0.2);
-				border-radius: 50%;
-				z-index: 0;
+			.cup-img {
+				width: 320px;
+				height: 320px;
+				object-fit: contain;
+				display: none;
+				margin-bottom: 20px;
 			}
-
-			/* Задняя стенка чашки (видимая только в профиль) */
-			.back {
-				position: absolute;
-				left: 10px;
-				top: 10px;
-				width: 160px;
-				height: 180px;
-				background: #fff;
-				border-radius: 25px 25px 45px 45px;
-				box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.08);
-				z-index: 1;
+			.status {
+				font-size: 14px;
+				color: #aaa;
+				margin-top: 10px;
 			}
-
-			/* Ручка */
-			.handle {
-				position: absolute;
-				right: -40px;
-				top: 50px;
-				width: 50px;
-				height: 100px;
-				border: 14px solid #fff;
-				border-left: none;
-				border-radius: 0 35px 35px 0;
-				box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
-				z-index: 4;
-			}
-
-			/* === Уровни жидкости и предметов внутри чашки === */
-
-			/* Вода / пар (сверху) */
-			.water {
-				position: absolute;
-				left: 30px;
-				top: 20px;
-				width: 120px;
-				height: 25px;
-				background: #e6f3ff;
-				border-radius: 10px;
-				opacity: 0.8;
-			}
-
-			/* Чайный пакетик */
-			.tea-bag {
-				position: absolute;
-				left: 65px;
-				top: 50px;
-				width: 50px;
-				height: 40px;
-				background: #f3f3f3;
-				border-radius: 10px 10px 15px 15px;
-				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-				z-index: 3;
-			}
-			.tea-bag::before {
-				content: '';
-				position: absolute;
-				top: -15px;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 10px;
-				height: 15px;
-				background: #ddd;
-				border-radius: 5px;
-			}
-
-			/* Кофе / чай (основной уровень) */
-			.coffee {
-				position: absolute;
-				left: 30px;
-				top: 90px;
-				width: 120px;
-				height: 70px;
-				background: #6d4c41;
-				border-radius: 5px;
-				box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.2);
-			}
-
-			/* Шапочка из молока / пены (если есть) */
-			.foam {
-				position: absolute;
-				left: 30px;
-				top: 160px;
-				width: 120px;
-				height: 30px;
-				background: #fff0e6;
-				border-radius: 10px;
-			}
-
-			/* Дно чашки */
-			.bottom {
-				position: absolute;
-				left: 10px;
-				top: 190px;
-				width: 160px;
-				height: 30px;
-				background: #fff;
-				border-radius: 0 0 20px 20px;
-				z-index: 2;
-				box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+			.status span {
+				font-weight: bold;
+				color: #fff;
 			}
 		</style>
 	</head>
 	<body>
-		<div class="mug">
-			<div class="shadow"></div>
-			<div class="back"></div>
+		<h2>Данные с датчиков</h2>
 
-			<!-- Уровни -->
-			<div class="water"></div>
-			<div class="tea-bag"></div>
-			<div class="coffee"></div>
-			<div class="foam"></div>
-			<div class="bottom"></div>
+		<!-- Картинка кружки -->
+		<img
+			id="cupImage"
+			class="cup-img"
+			alt="Кружка с водой"
+		/>
 
-			<div class="handle"></div>
+		<div class="status">
+			<p>
+				Вода:
+				<span id="waterValue">—</span>
+				(Уровень:
+				<span id="waterText">—</span>
+				)
+			</p>
+			<p>
+				Свет:
+				<span id="lightValue">—</span>
+				(Кружка:
+				<span id="lightText">—</span>
+				)
+			</p>
 		</div>
+
+		<!-- Счётчик обновлений (для отладки) -->
+		<p style="color: #aaa; margin-top: 10px; font-size: 12px">
+			Обновлено:
+			<span id="updateCount">0</span>
+			раз
+		</p>
+
+		<script>
+			let updateCount = 0
+
+			async function loadFromCSV() {
+				try {
+					// Добавляем ?_=timestamp, чтобы избежать кэширования
+					const res = await fetch('data.csv?_=' + Date.now())
+					if (!res.ok) throw new Error('Ошибка загрузки data.csv')
+
+					const text = await res.text()
+					const lines = text.trim().split('\n').slice(1) // пропускаем заголовок
+
+					if (lines.length === 0) {
+						console.warn('CSV пуст')
+						return
+					}
+
+					// Берём последнюю строку (свежие данные)
+					const lastLine = lines[lines.length - 1]
+					const [waterLevel, lightSensor] = lastLine.split(',').map(Number)
+
+					updateUI(waterLevel, lightSensor)
+					updateCount++
+					document.getElementById('updateCount').textContent = updateCount
+				} catch (e) {
+					console.error('Ошибка загрузки CSV:', e)
+					document.getElementById('waterValue').textContent = 'Ошибка'
+					document.getElementById('lightValue').textContent = 'CSV не найден'
+					document.getElementById('cupImage').style.display = 'none'
+				}
+			}
+
+			function updateUI(waterLevel, lightSensor) {
+				// Обновляем числовые значения
+				document.getElementById('waterValue').textContent = waterLevel
+				document.getElementById('lightValue').textContent = lightSensor
+
+				// --- Логика для воды ---
+				let waterText = ''
+				let imageSrc = ''
+				let cupVisible = false
+
+				if (waterLevel <= 100) {
+					waterText = 'Мало (1-100)'
+					imageSrc = 'images/small_one.png'
+					cupVisible = true
+				} else if (waterLevel <= 200) {
+					waterText = 'Мало (101-200)'
+					imageSrc = 'images/small_two.png'
+					cupVisible = true
+				} else if (waterLevel <= 300) {
+					waterText = 'Много (201-300)'
+					imageSrc = 'images/big_one.png'
+					cupVisible = true
+				} else if (waterLevel <= 400) {
+					waterText = 'Много (301-400)'
+					imageSrc = 'images/big_two.png'
+					cupVisible = true
+				} else {
+					waterText = 'Переполнение (>400)'
+					imageSrc = 'images/too_much.png'
+					cupVisible = true
+				}
+
+				document.getElementById('waterText').textContent = waterText
+
+				// --- Логика для света ---
+				let lightText = 'Кружки нет'
+				if (lightSensor >= 250) {
+					lightText = 'Кружка есть'
+					cupVisible = true
+				} else {
+					cupVisible = false
+				}
+
+				document.getElementById('lightText').textContent = lightText
+
+				// --- Финальное решение: показать/скрыть кружку ---
+				const img = document.getElementById('cupImage')
+				if (cupVisible && imageSrc) {
+					// Добавляем ?timestamp, чтобы картинка тоже обновлялась
+					img.src = imageSrc + '?t=' + Date.now()
+					img.style.display = 'block'
+				} else {
+					img.style.display = 'none'
+				}
+			}
+
+			// Загрузить сразу при старте
+			loadFromCSV()
+
+			// Обновлять каждые 5 секунд
+			setInterval(loadFromCSV, 5000)
+		</script>
 	</body>
 </html>
