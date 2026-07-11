@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Чашка в разрезе с уровнями</title>
+		<style>
+			body {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+				background: #e9e4dc;
+				margin: 0;
+				font-family: sans-serif;
+			}
+
+			.mug {
+				position: relative;
+				width: 180px;
+				height: 220px;
+			}
+
+			/* Тень */
+			.shadow {
+				position: absolute;
+				left: 20px;
+				top: 210px;
+				width: 140px;
+				height: 10px;
+				background: rgba(0, 0, 0, 0.2);
+				border-radius: 50%;
+				z-index: 0;
+			}
+
+			/* Задняя стенка чашки (видимая только в профиль) */
+			.back {
+				position: absolute;
+				left: 10px;
+				top: 10px;
+				width: 160px;
+				height: 180px;
+				background: #fff;
+				border-radius: 25px 25px 45px 45px;
+				box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.08);
+				z-index: 1;
+			}
+
+			/* Ручка */
+			.handle {
+				position: absolute;
+				right: -40px;
+				top: 50px;
+				width: 50px;
+				height: 100px;
+				border: 14px solid #fff;
+				border-left: none;
+				border-radius: 0 35px 35px 0;
+				box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+				z-index: 4;
+			}
+
+			/* === Уровни жидкости и предметов внутри чашки === */
+
+			/* Вода / пар (сверху) */
+			.water {
+				position: absolute;
+				left: 30px;
+				top: 20px;
+				width: 120px;
+				height: 25px;
+				background: #e6f3ff;
+				border-radius: 10px;
+				opacity: 0.8;
+			}
+
+			/* Чайный пакетик */
+			.tea-bag {
+				position: absolute;
+				left: 65px;
+				top: 50px;
+				width: 50px;
+				height: 40px;
+				background: #f3f3f3;
+				border-radius: 10px 10px 15px 15px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+				z-index: 3;
+			}
+			.tea-bag::before {
+				content: '';
+				position: absolute;
+				top: -15px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 10px;
+				height: 15px;
+				background: #ddd;
+				border-radius: 5px;
+			}
+
+			/* Кофе / чай (основной уровень) */
+			.coffee {
+				position: absolute;
+				left: 30px;
+				top: 90px;
+				width: 120px;
+				height: 70px;
+				background: #6d4c41;
+				border-radius: 5px;
+				box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.2);
+			}
+
+			/* Шапочка из молока / пены (если есть) */
+			.foam {
+				position: absolute;
+				left: 30px;
+				top: 160px;
+				width: 120px;
+				height: 30px;
+				background: #fff0e6;
+				border-radius: 10px;
+			}
+
+			/* Дно чашки */
+			.bottom {
+				position: absolute;
+				left: 10px;
+				top: 190px;
+				width: 160px;
+				height: 30px;
+				background: #fff;
+				border-radius: 0 0 20px 20px;
+				z-index: 2;
+				box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.05);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mug">
+			<div class="shadow"></div>
+			<div class="back"></div>
+
+			<!-- Уровни -->
+			<div class="water"></div>
+			<div class="tea-bag"></div>
+			<div class="coffee"></div>
+			<div class="foam"></div>
+			<div class="bottom"></div>
+
+			<div class="handle"></div>
+		</div>
+	</body>
+</html>
