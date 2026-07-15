@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Уровень воды и освещение</title>
+		<link rel="stylesheet" src="style.css">
 	</head>
 	<body>
 		<h2>Данные с датчиков</h2>
@@ -23,19 +24,11 @@
 				)
 			</p>
 			<p>
-				Свет:
-				<span id="lightValue">—</span>
-				(Кружка:
-				<span id="lightText">—</span>
-				)
+				Кружка:
+				<span id="lightText">—</span>			
 			</p>
 		</div>
 
-		<!-- Счётчик обновлений (для отладки) -->
-		<p style="color: #aaa; margin-top: 10px; font-size: 12px">
-			Обновлено:
-			<span id="updateCount">0</span>
-			раз
-		</p>
+		<script src="script.js"></script>
 	</body>
 </html>
