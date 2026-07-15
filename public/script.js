@@ -20,6 +20,7 @@ let updateCount = 0
 
 					updateUI(waterLevel, lightSensor)
 					updateCount++
+					console.log(updateCount)
 					document.getElementById('updateCount').textContent = updateCount
 				} catch (e) {
 					console.error('Ошибка загрузки CSV:', e)
