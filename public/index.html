@@ -2,33 +2,35 @@
 <html lang="ru">
 	<head>
 		<meta charset="utf-8" />
-		<title>Уровень воды и освещение</title>
-		<link rel="stylesheet" src="style.css">
+		<title>Уровень воды и вес</title>
+		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
-		<h2>Данные с датчиков</h2>
-
-		<!-- Картинка кружки -->
+		<h2>Данные с весов</h2>
 		<img
 			id="cupImage"
 			class="cup-img"
 			alt="Кружка с водой"
 		/>
-
 		<div class="status">
-			<p>
-				Вода:
-				<span id="waterValue">—</span>
-				(Уровень:
-				<span id="waterText">—</span>
-				)
+			<p class="weight-display">
+				Вес: <span id="weightValue">—</span> г
 			</p>
 			<p>
-				Кружка:
-				<span id="lightText">—</span>			
+				Состояние:
+				<span id="weightText">—</span>
+			</p>
+			<p>
+				Кружка на весах:
+				<span id="cupStatus">—</span>
 			</p>
 		</div>
-
+		<p class="update-info">
+			Обновлено:
+			<span id="updateCount">0</span>
+			раз
+		</p>
+		<div id="errorMessage" class="error"></div>
 		<script src="script.js"></script>
 	</body>
 </html>
