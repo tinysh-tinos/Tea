@@ -1,93 +1,92 @@
 let updateCount = 0
-
-			async function loadFromCSV() {
-				try {
-					// Добавляем ?_=timestamp, чтобы избежать кэширования
-					const res = await fetch('data.csv?_=' + Date.now())
-					if (!res.ok) throw new Error('Ошибка загрузки data.csv')
-
-					const text = await res.text()
-					const lines = text.trim().split('\n').slice(1) // пропускаем заголовок
-
-					if (lines.length === 0) {
-						console.warn('CSV пуст')
-						return
-					}
-
-					// Берём последнюю строку (свежие данные)
-					const lastLine = lines[lines.length - 1]
-					const [waterLevel, lightSensor] = lastLine.split(',').map(Number)
-
-					updateUI(waterLevel, lightSensor)
-					updateCount++
-					console.log(updateCount)
-					document.getElementById('updateCount').textContent = updateCount
-				} catch (e) {
-					console.error('Ошибка загрузки CSV:', e)
-					document.getElementById('waterValue').textContent = 'Ошибка'
-					document.getElementById('lightValue').textContent = 'CSV не найден'
-					document.getElementById('cupImage').style.display = 'none'
-				}
+async function loadFromCSV() {
+	const errorDiv = document.getElementById('errorMessage')
+	errorDiv.textContent = ''
+	try {
+		const res = await fetch('data.csv?_=' + Date.now())
+		if (!res.ok) throw new Error('Ошибка загрузки data.csv')
+		const text = await res.text()
+		const lines = text.trim().split('\n')
+		if (lines.length === 0) {
+			throw new Error('CSV файл пуст')
+		}
+		const header = lines[0].trim()
+		let weightValue = 0
+		if (header.toLowerCase() === 'main') {
+			if (lines.length < 2) {
+				throw new Error('Нет данных в CSV файле')
 			}
-
-			function updateUI(waterLevel, lightSensor) {
-				// Обновляем числовые значения
-				document.getElementById('waterValue').textContent = waterLevel
-				document.getElementById('lightValue').textContent = lightSensor
-
-				// --- Логика для воды ---
-				let waterText = ''
-				let imageSrc = ''
-				let cupVisible = false
-
-				if (waterLevel <= 100) {
-					waterText = 'Мало (1-100)'
-					imageSrc = 'images/small_one.png'
-					cupVisible = true
-				} else if (waterLevel <= 200) {
-					waterText = 'Мало (101-200)'
-					imageSrc = 'images/small_two.png'
-					cupVisible = true
-				} else if (waterLevel <= 300) {
-					waterText = 'Много (201-300)'
-					imageSrc = 'images/big_one.png'
-					cupVisible = true
-				} else if (waterLevel <= 400) {
-					waterText = 'Много (301-400)'
-					imageSrc = 'images/big_two.png'
-					cupVisible = true
-				} else {
-					waterText = 'Переполнение (>400)'
-					imageSrc = 'images/too_much.png'
-					cupVisible = true
-				}
-
-				document.getElementById('waterText').textContent = waterText
-
-				// --- Логика для света ---
-				let lightText = 'Кружки нет'
-				if (lightSensor >= 250) {
-					lightText = 'Кружка есть'
-					cupVisible = true
-				} else {
-					cupVisible = false
-				}
-
-				document.getElementById('lightText').textContent = lightText
-
-				// --- Финальное решение: показать/скрыть кружку ---
-				const img = document.getElementById('cupImage')
-				if (cupVisible && imageSrc) {
-					// Добавляем ?timestamp, чтобы картинка тоже обновлялась
-					img.src = imageSrc + '?t=' + Date.now()
-					img.style.display = 'block'
-				} else {
-					img.style.display = 'none'
-				}
+			const lastLine = lines[lines.length - 1]
+			weightValue = parseFloat(lastLine.trim())		
+			if (isNaN(weightValue)) {
+				throw new Error('Некорректное значение в CSV: ' + lastLine)
 			}
-
-			// Загрузить сразу при старте
-			loadFromCSV()
-
-			// Обновлять каждые 5 секунд
-			setInterval(loadFromCSV, 5000)
+		} else {
+			const lastLine = lines[lines.length - 1]
+			weightValue = parseFloat(lastLine.trim())		
+			if (isNaN(weightValue)) {
+				throw new Error('Некорректное значение в CSV: ' + lastLine)
+			}
+		}
+		updateUI(weightValue)
+		updateCount++
+		document.getElementById('updateCount').textContent = updateCount
+	} catch (e) {
+		console.error('Ошибка загрузки CSV:', e)
+		errorDiv.textContent = 'Ошибка: ' + e.message
+		document.getElementById('weightValue').textContent = 'Ошибка'
+		document.getElementById('cupImage').style.display = 'none'
+	}
+}
+function updateUI(weight) {
+	const weightDisplay = Math.round(weight)
+	document.getElementById('weightValue').textContent = weightDisplay
+	let weightText = ''
+	let imageSrc = ''
+	let cupOnScale = false
+	if (weight <= 0) {
+		weightText = 'Кружка отсутствует'
+		cupOnScale = false
+		document.getElementById('cupStatus').textContent = '❌ Нет'
+	} else if (weight > 0 && weight <= 50) {
+		weightText = 'Пустая кружка (1-50 г)'
+		imageSrc = 'images/empty_cup.png'
+		cupOnScale = true
+		document.getElementById('cupStatus').textContent = '✅ Да (пустая)'
+	} else if (weight > 50 && weight <= 150) {
+		weightText = 'Мало воды (51-150 г)'
+		imageSrc = 'images/small_one.png'
+		cupOnScale = true
+		document.getElementById('cupStatus').textContent = '✅ Да (мало воды)'
+	} else if (weight > 150 && weight <= 250) {
+		weightText = 'Средний уровень (151-250 г)'
+		imageSrc = 'images/small_two.png'
+		cupOnScale = true
+		document.getElementById('cupStatus').textContent = '✅ Да (средне)'
+	} else if (weight > 250 && weight <= 350) {
+		weightText = 'Много воды (251-350 г)'
+		imageSrc = 'images/big_one.png'
+		cupOnScale = true
+		document.getElementById('cupStatus').textContent = '✅ Да (много)'
+	} else if (weight > 350 && weight <= 500) {
+		weightText = 'Полная кружка (351-500 г)'
+		imageSrc = 'images/big_two.png'
+		cupOnScale = true
+		document.getElementById('cupStatus').textContent = '✅ Да (полная)'
+	} else if (weight > 500) {
+		weightText = 'Переполнение (>500 г)'
+		imageSrc = 'images/big_two.png'
+		cupOnScale = true
+		document.getElementById('cupStatus').textContent = '⚠️ Переполнение!'
+	}
+	document.getElementById('weightText').textContent = weightText
+	const img = document.getElementById('cupImage')
+	if (cupOnScale && imageSrc) {
+		img.src = imageSrc + '?t=' + Date.now()
+		img.style.display = 'block'
+	} else {
+		img.style.display = 'none'
+	}
+}
+loadFromCSV()
+setInterval(loadFromCSV, 5000)
