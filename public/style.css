@@ -1,44 +1,51 @@
 body {
-	background: #1f1f1f;
+	background-color: #1f1f1f;
 	color: #fff;
 	font-family: Arial, sans-serif;
-	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding: 20px;
 }
-h2 {
-	margin: 0 0 16px;
-	font-weight: 600;
+
+li {
+	list-style-type: none;
 }
-.cup-img {
-	width: 320px;
-	height: 320px;
-	object-fit: contain;
-	display: none;
-	margin-bottom: 20px;
+
+.vubor {
+	display: flex;
+	gap: 5%;
+	margin-top: 3%;
 }
-.status {
-	font-size: 14px;
-	color: #aaa;
-	margin-top: 10px;
+
+.title {
+	margin-top: -1%;
 }
-.status span {
-	font-weight: bold;
-	color: #fff;
+
+.one li {
+	margin-left: 18%;
 }
-.error {
-	color: #ff6b6b;
-	margin-top: 10px;
-	font-size: 14px;
+
+.one input {
+	margin-left: 23%;
 }
-.weight-display {
-	font-size: 24px;
-	color: #4ecdc4;
-	margin: 10px 0;
+
+.two input {
+	margin-left: 15%;
 }
-.update-info {
-	color: #aaa;
-	margin-top: 10px;
-	font-size: 12px;
+.three input {
+	margin-left: 17%;
+}
+
+button {
+	background-color: rgb(38, 38, 171);
+	color: white;
+	border-radius: 4px;
+	width: 100px;
+	height: 50px;
+}
+
+@media (max-width: 700) {
+	.vubor {
+		display: grid;
+	}
 }
