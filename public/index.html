@@ -1,36 +1,69 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<title>Уровень воды и вес</title>
-		<link rel="stylesheet" href="style.css" />
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>Document</title>
+		<link
+			rel="stylesheet"
+			href="style.css"
+		/>
 	</head>
 	<body>
-		<h2>Данные с весов</h2>
-		<img
-			id="cupImage"
-			class="cup-img"
-			alt="Кружка с водой"
-		/>
-		<div class="status">
-			<p class="weight-display">
-				Вес: <span id="weightValue">—</span> г
-			</p>
-			<p>
-				Состояние:
-				<span id="weightText">—</span>
-			</p>
-			<p>
-				Кружка на весах:
-				<span id="cupStatus">—</span>
-			</p>
+		<li class="title">Выберите кружку:</li>
+		<div class="vubor">
+			<div class="one">
+				<img
+					src="main/images/big_two.png"
+					width="300"
+				/>
+				<li>Кружка чая/кофе</li>
+				<label>
+					<input
+						type="checkbox"
+						id="one"
+					/>
+					Выбрать
+				</label>
+			</div>
+			<div class="two">
+				<img
+					src="main/images/big_two2.png"
+					width="140"
+				/>
+				<li>Бутылка йогурта</li>
+				<label>
+					<input
+						type="checkbox"
+						id="two"
+					/>
+					Выбрать
+				</label>
+			</div>
+			<div class="three">
+				<img
+					src="main/images/big_two4.png"
+					width="140"
+				/>
+				<li>Банка колы/пепси</li>
+				<label>
+					<input
+						type="checkbox"
+						id="three"
+					/>
+					Выбрать
+				</label>
+			</div>
 		</div>
-		<p class="update-info">
-			Обновлено:
-			<span id="updateCount">0</span>
-			раз
-		</p>
-		<div id="errorMessage" class="error"></div>
+
+		<button id="dalee">Далее</button>
+		<div
+			id="userSelectionInfo"
+			style="font-weight: bold; color: #0d6efd"
+		></div>
 		<script src="script.js"></script>
 	</body>
 </html>
