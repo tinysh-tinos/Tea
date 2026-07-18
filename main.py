@@ -11,7 +11,6 @@ try:
             print(decoded_data)
             with open('data.csv', mode='w', newline='', encoding='utf-8') as file:
                 writer = csv.writer(file)
-                writer.writerow(['main'])
                 writer.writerow([decoded_data])
             time.sleep(1)            
 except KeyboardInterrupt:
