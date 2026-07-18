@@ -1,51 +1,109 @@
+/* public/style.css — исправлено */
+
 body {
-	background-color: #1f1f1f;
+	background: #1f1f1f;
 	color: #fff;
 	font-family: Arial, sans-serif;
+	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding: 20px;
+}
+
+.vubor1 {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.main {
+	display: none;
+}
+
+.vubor {
+	display: flex;
+	gap: 20px;
 }
 
 li {
 	list-style-type: none;
 }
 
-.vubor {
-	display: flex;
-	gap: 5%;
-	margin-top: 3%;
+.one,
+.two,
+.three {
+	text-align: center;
 }
 
-.title {
-	margin-top: -1%;
-}
-
-.one li {
-	margin-left: 18%;
-}
-
-.one input {
-	margin-left: 23%;
-}
-
-.two input {
-	margin-left: 15%;
-}
+/* Центрирование чекбоксов */
+.one input,
+.two input,
 .three input {
-	margin-left: 17%;
+	margin-top: 10px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-button {
-	background-color: rgb(38, 38, 171);
+/* Установим ширину для адаптивности */
+.vubor div {
+	min-width: 180px;
+}
+
+.vubor1 button {
+	width: 120px;
+	height: 40px;
+	background-color: rgb(50, 50, 148);
 	color: white;
-	border-radius: 4px;
-	width: 100px;
-	height: 50px;
+	border: none;
+	border-radius: 12px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.2s;
 }
 
-@media (max-width: 700) {
-	.vubor {
-		display: grid;
-	}
+.vubor1 button:hover {
+	background-color: rgb(40, 40, 128);
+}
+
+h2 {
+	margin: 0 0 16px;
+	font-weight: 600;
+}
+
+.cup-img {
+	width: 320px;
+	height: 320px;
+	object-fit: contain;
+	display: none;
+	margin-bottom: 20px;
+}
+
+.status {
+	font-size: 14px;
+	color: #aaa;
+	margin-top: 10px;
+}
+
+.status span {
+	font-weight: bold;
+	color: #fff;
+}
+
+.error {
+	color: #ff6b6b;
+	margin-top: 10px;
+	font-size: 14px;
+}
+
+.weight-display {
+	font-size: 24px;
+	color: #4ecdc4;
+	margin: 10px 0;
+}
+
+.update-info {
+	color: #aaa;
+	margin-top: 10px;
+	font-size: 12px;
 }
