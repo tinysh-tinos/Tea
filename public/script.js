@@ -1,7 +1,5 @@
-// public/script.js
-
 let updateCount = 0
-let uservubral = [] // ← Теперь это массив выбранных ID
+let uservubral = []
 
 // 👇 Обработчик выбора пользователя
 document.getElementById('vidit').addEventListener('click', () => {
@@ -9,28 +7,23 @@ document.getElementById('vidit').addEventListener('click', () => {
 	uservubral = Array.from(checkboxes).map(cb => cb.id)
 	console.log('[script.js] Выбрано:', uservubral)
 
-	// Генерируем кастомное событие (на всякий случай)
 	window.dispatchEvent(
 		new CustomEvent('userSelectionReady', {
 			detail: { selectedIds: uservubral }
 		})
 	)
 
-	// Переключаем интерфейс
 	document.querySelector('.vubor1').style.display = 'none'
 	document.querySelector('.main').style.display = 'block'
 
-	// Запускаем обновление сразу после выбора
 	loadFromCSV()
 })
 
-// Слушаем выбор (если в будущем захотите вызывать снаружи)
 window.addEventListener('userSelectionReady', e => {
 	uservubral = e.detail.selectedIds || []
 	console.log('[script.js] Получен выбор:', uservubral)
 })
 
-// Обновляем UI с учётом выбора
 function updateUI(weight, selectionIds) {
 	const weightDisplay = Math.round(weight)
 	document.getElementById('weightValue').textContent = weightDisplay
@@ -46,79 +39,78 @@ function updateUI(weight, selectionIds) {
 		cupImageSrc = ''
 		cupStatus = '❌ Нет'
 	} else {
-		// Теперь используем includes
-		if (selectionIds.includes('one')) {
-			if (weight > 0 && weight <= 150) {
-				cupText = 'Пустая кружка (1-150 г)'
+		// Проверяем выбранный ID (или используем дефолтный 'one', если список пуст)
+		const targetId = selectionIds.length > 0 ? selectionIds[0] : 'one'
+
+		if (targetId === 'one') {
+			if (weight > 0 && weight <= 112) {
+				cupText = 'Пустая кружка (1-112 г)'
 				cupImageSrc = 'images/small_one.png'
 				cupStatus = '✅ Да (пустая)'
-			} else if (weight > 151 && weight <= 270) {
-				cupText = 'Мало воды (151-270 г)'
+			} else if (weight > 112 && weight <= 225) {
+				cupText = 'Мало воды (112-225 г)'
 				cupImageSrc = 'images/small_two.png'
 				cupStatus = '✅ Да (мало)'
-			} else if (weight > 271 && weight <= 350) {
-				cupText = 'Полная кружка (271-350 г)'
+			} else if (weight > 225 && weight <= 338) {
+				cupText = 'Полная кружка (225-338 г)'
 				cupImageSrc = 'images/big_one.png'
 				cupStatus = '✅ Да (полная)'
 			} else {
-				cupText = 'Полная кружка (>350 г)'
+				cupText = 'Переполненная кружка (>338 г)'
 				cupImageSrc = 'images/big_two.png'
-				cupStatus = '✅ Да (полная)'
+				cupStatus = '✅ Да (переполнена)'
 			}
-		} else if (selectionIds.includes('two')) {
-			// Бутылка йогурта
-			if (weight > 0 && weight <= 150) {
-				cupText = 'Пустая бутылка (1-150 г)'
+		} else if (targetId === 'two') {
+			if (weight > 0 && weight <= 112) {
+				cupText = 'Пустая бутылка (1-112 г)'
 				cupImageSrc = 'images/small_one1.png'
 				cupStatus = '✅ Да (пустая)'
-			} else if (weight > 151 && weight <= 270) {
-				cupText = 'Мало йогурта (151-270 г)'
+			} else if (weight > 112 && weight <= 225) {
+				cupText = 'Мало йогурта (112-225 г)'
 				cupImageSrc = 'images/small_two2.png'
 				cupStatus = '✅ Да (мало)'
-			} else if (weight > 271 && weight <= 350) {
-				cupText = 'Полная бутылка (271-350 г)'
+			} else if (weight > 225 && weight <= 338) {
+				cupText = 'Полная бутылка (225-338 г)'
 				cupImageSrc = 'images/big_one1.png'
 				cupStatus = '✅ Да (полная)'
 			} else {
-				cupText = 'Переполненная бутылка (>350 г)'
+				cupText = 'Переполненная бутылка (>338 г)'
 				cupImageSrc = 'images/big_two2.png'
 				cupStatus = '✅ Да (переполнена)'
 			}
-		} else if (selectionIds.includes('three')) {
-			// Банка колы
-			if (weight > 0 && weight <= 150) {
-				cupText = 'Пустая банка (1-150 г)'
+		} else if (targetId === 'three') {
+			if (weight > 0 && weight <= 112) {
+				cupText = 'Пустая банка (1-112 г)'
 				cupImageSrc = 'images/small_one3.png'
 				cupStatus = '✅ Да (пустая)'
-			} else if (weight > 151 && weight <= 270) {
-				cupText = 'Мало газировки (151-270 г)'
+			} else if (weight > 112 && weight <= 225) {
+				cupText = 'Мало газировки (112-225 г)'
 				cupImageSrc = 'images/small_two4.png'
 				cupStatus = '✅ Да (мало)'
-			} else if (weight > 271 && weight <= 350) {
-				cupText = 'Полная банка (271-350 г)'
+			} else if (weight > 225 && weight <= 338) {
+				cupText = 'Полная банка (225-338 г)'
 				cupImageSrc = 'images/big_one3.png'
 				cupStatus = '✅ Да (полная)'
 			} else {
-				cupText = 'Переполненная банка (>350 г)'
+				cupText = 'Переполненная банка (>338 г)'
 				cupImageSrc = 'images/big_two4.png'
 				cupStatus = '✅ Да (переполнена)'
 			}
 		} else {
-			// Дефолт — кружка
-			if (weight > 0 && weight <= 150) {
-				cupText = 'Пустая кружка (1-150 г)'
+			if (weight > 0 && weight <= 112) {
+				cupText = 'Пустая кружка (1-112 г)'
 				cupImageSrc = 'images/small_one.png'
 				cupStatus = '✅ Да (пустая)'
-			} else if (weight > 151 && weight <= 270) {
-				cupText = 'Мало воды (151-270 г)'
+			} else if (weight > 112 && weight <= 225) {
+				cupText = 'Мало воды (112-225 г)'
 				cupImageSrc = 'images/small_two.png'
 				cupStatus = '✅ Да (мало)'
-			} else if (weight > 271 && weight <= 350) {
-				cupText = 'Полная кружка (271-350 г)'
+			} else if (weight > 225 && weight <= 338) {
+				cupText = 'Полная кружка (225-338 г)'
 				cupImageSrc = 'images/big_one.png'
 				cupStatus = '✅ Да (полная)'
 			} else {
-				cupText = 'Переполненная кружка (>350 г)'
+				cupText = 'Переполненная кружка (>338 г)'
 				cupImageSrc = 'images/big_two.png'
 				cupStatus = '✅ Да (переполнена)'
 			}
@@ -128,7 +120,6 @@ function updateUI(weight, selectionIds) {
 	document.getElementById('weightText').textContent = cupText
 	document.getElementById('cupStatus').textContent = cupStatus
 
-	// Устанавливаем изображение
 	const img = document.getElementById('cupImage')
 	if (cupImageSrc) {
 		img.src = cupImageSrc + '?t=' + Date.now()
@@ -140,6 +131,7 @@ function updateUI(weight, selectionIds) {
 	updateCount++
 	document.getElementById('updateCount').textContent = updateCount
 }
+
 
 async function loadFromCSV() {
 	const errorDiv = document.getElementById('errorMessage')
@@ -156,7 +148,6 @@ async function loadFromCSV() {
 		if (isNaN(weightValue))
 			throw new Error('Некорректное значение в CSV: ' + lastLine)
 
-		// Передаём выбор (uservubral)
 		updateUI(weightValue, uservubral)
 	} catch (e) {
 		console.error('Ошибка загрузки CSV:', e)
