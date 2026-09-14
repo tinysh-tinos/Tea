@@ -1,7 +1,6 @@
 let updateCount = 0
 let uservubral = []
 
-// 👇 Обработчик выбора пользователя
 document.getElementById('vidit').addEventListener('click', () => {
 	const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked')
 	uservubral = Array.from(checkboxes).map(cb => cb.id)
